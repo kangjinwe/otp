@@ -44,7 +44,8 @@
 -define(SEARCH_ENTRY, 420).
 -define(GOTO_ENTRY,   421).
 
--define(DEFAULT_COL_WIDTH, 150).
+%-define(DEFAULT_COL_WIDTH, 150).
+-define(DEFAULT_COL_WIDTH, 500).
 
 -record(state,
 	{
