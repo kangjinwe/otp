@@ -237,7 +237,8 @@ init_dict_page(Parent, Pid, Table) ->
 		     case observer_wx:try_rpc(node(Pid), erlang, process_info, [Pid, dictionary])
 		     of
 			 {dictionary,Dict} ->
-			     Html = observer_html_lib:expandable_term("Dictionary", Dict, Table, Cs),
+				 Dict1 = lists:sort(Dict),
+			     Html = observer_html_lib:expandable_term("Dictionary", Dict1, Table, Cs),
 			     wxHtmlWindow:setPage(Win, Html);
 			 _ ->
 			     throw(process_undefined)

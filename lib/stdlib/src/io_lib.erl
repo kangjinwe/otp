@@ -416,23 +416,22 @@ write_ref(Ref) ->
     erlang:ref_to_list(Ref).
 
 write_map(_, 1, _E, _O) -> "#{}";
-write_map(Map, D, E, O) when is_integer(D) ->
-    I = maps:iterator(Map, O),
-    case maps:next(I) of
-        {K, V, NextI} ->
+write_map(Map, D, E, O)->
+	case lists:sort(maps:to_list(Map)) of
+        [{K, V}|NextI] ->
             D0 = D - 1,
             W = write_map_assoc(K, V, D0, E, O),
             [$#,${,[W | write_map_body(NextI, D0, D0, E, O)],$}];
-        none -> "#{}"
+        [] -> "#{}"
     end.
 
 write_map_body(_, 1, _D0, _E, _O) -> ",...";
-write_map_body(I, D, D0, E, O) ->
-    case maps:next(I) of
-        {K, V, NextI} ->
+write_map_body(L, D, D0, E, O) ->
+    case L of
+        [{K, V}|NextI] ->
             W = write_map_assoc(K, V, D0, E, O),
             [$,,W|write_map_body(NextI, D - 1, D0, E, O)];
-        none -> ""
+        [] -> ""
     end.
 
 write_map_assoc(K, V, D, E, O) ->

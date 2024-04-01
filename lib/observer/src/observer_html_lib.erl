@@ -173,12 +173,12 @@ all_or_expand(Tab,Term,Preview,true)
   when not is_binary(Term) ->
     Key = {Key1,Key2,Key3} = {erlang:unique_integer([positive]),1,2},
     ets:insert(Tab,{Key,Term}),
-    [href_proc_port(lists:flatten(Preview), false), $\n,
-     href("TARGET=\"expanded\"",
+    [href("TARGET=\"expanded\"",
 	  ["#Term?key1="++integer_to_list(Key1)++
 	       "&key2="++integer_to_list(Key2)++
 	       "&key3="++integer_to_list(Key3)],
-	  "Click to expand above term")];
+	  "..."),
+	 href_proc_port(lists:flatten(Preview), false)];
 all_or_expand(Tab,Bin,_PreviewStr,_Expand)
   when is_binary(Bin) ->
     OBSBin = observer_lib:make_obsbin(Bin,Tab),

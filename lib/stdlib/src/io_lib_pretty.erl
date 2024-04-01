@@ -604,21 +604,21 @@ print_length_map(Map, 1, _T, RF, Enc, Str, Ord) ->
     More = fun(T1, Dd) -> ?FUNCTION_NAME(Map, 1+Dd, T1, RF, Enc, Str, Ord) end,
     {"#{...}", 6, 3, More};
 print_length_map(Map, D, T, RF, Enc, Str, Ord) when is_map(Map) ->
-    Next = maps:next(maps:iterator(Map, Ord)),
+    Next = lists:sort(maps:to_list(Map)),
     PairsS = print_length_map_pairs(Next, D, D - 1, tsub(T, 3), RF, Enc, Str, Ord),
     {Len, Dots} = list_length(PairsS, 3, 0),
     {{map, PairsS}, Len, Dots, no_more}.
 
-print_length_map_pairs(none, _D, _D0, _T, _RF, _Enc, _Str, _Ord) ->
+print_length_map_pairs([], _D, _D0, _T, _RF, _Enc, _Str, _Ord) ->
     [];
 print_length_map_pairs(Term, D, D0, T, RF, Enc, Str, Ord) when D =:= 1; T =:= 0->
     More = fun(T1, Dd) ->
                    ?FUNCTION_NAME(Term, D+Dd, D0, T1, RF, Enc, Str, Ord)
            end,
     {dots, 3, 3, More};
-print_length_map_pairs({K, V, Iter}, D, D0, T, RF, Enc, Str, Ord) ->
-    Next = maps:next(Iter),
-    T1 = case Next =:= none of
+print_length_map_pairs([{K, V}| Iter], D, D0, T, RF, Enc, Str, Ord) ->
+    Next = Iter,
+    T1 = case Next =:= [] of
              false -> tsub(T, 1);
              true -> T
          end,
